@@ -24,6 +24,8 @@ export default function ShopPage() {
   const [isCustomSize, setIsCustomSize] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isValid, setIsValid] = useState(true);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const sizeParam = searchParams.get("size");
@@ -130,6 +132,66 @@ export default function ShopPage() {
     router.push("/cart");
   };
 
+  const handleSingleIncrement = (type: 'width' | 'height', direction: 'up' | 'down') => {
+    const roundToQuarter = (value: number) => {
+      return Math.round(value * 4) / 4;
+    };
+
+    if (type === 'width') {
+      setCustomWidth(prev => {
+        if (!prev) return 4;
+        const currentValue = roundToQuarter(prev);
+        return direction === 'up' 
+          ? Math.min(currentValue + 0.25, 24)
+          : Math.max(currentValue - 0.25, 4);
+      });
+    } else {
+      setCustomHeight(prev => {
+        if (!prev) return 6;
+        const currentValue = roundToQuarter(prev);
+        return direction === 'up'
+          ? Math.min(currentValue + 0.25, 36)
+          : Math.max(currentValue - 0.25, 6);
+      });
+    }
+  };
+
+  const startIncrementing = (type: 'width' | 'height', direction: 'up' | 'down') => {
+    // Handle single click immediately
+    handleSingleIncrement(type, direction);
+    
+    // Start a timeout before beginning hold-to-increment
+    const timeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        handleSingleIncrement(type, direction);
+      }, 100);
+      setIntervalId(interval);
+    }, 300); // 300ms delay before starting hold-to-increment
+    setTimeoutId(timeout);
+  };
+
+  const stopIncrementing = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      setTimeoutId(null);
+    }
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [intervalId, timeoutId]);
+
   return (
     <div className="min-h-screen bg-tan">
       <div className="container mx-auto px-4 pt-32 pb-16">
@@ -143,14 +205,17 @@ export default function ShopPage() {
           </div>
           <div className="space-y-8">
             <div>
-              <h1 className="text-4xl font-bold mb-4 text-navy">Solid Oak Frame</h1>
-              <p className="text-gray-700 text-lg">
-                Solid oak frame with walnut detail
+              <h1 className="text-4xl font-bold mb-1 text-black">Solid Oak Frame</h1>
+              <p className="text-gray-700 text-lg mb-8">
+                With walnut detail
+              </p>
+              <p className="text-3xl font-bold text-black mb-8">
+                {formatPrice(getPrice(selectedSize.display, selectedFinish.id))}
               </p>
             </div>
             
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-navy flex items-center gap-2">
+              <h2 className="text-2xl font-semibold mb-4 text-black flex items-center gap-2">
                 Size
                 <div className="group relative">
                   <span className="w-5 h-5 rounded-full bg-navy text-white text-xs flex items-center justify-center cursor-help">i</span>
@@ -161,35 +226,77 @@ export default function ShopPage() {
               </h2>
               
               {/* Custom Size Input */}
-              <div className="mb-6 p-4 border-2 border-gray-200 rounded-lg">
+              <div className="mb-6 ph-4 border-2 border-gray-200 rounded-lg">
                 <div className="flex items-center justify-between w-full">
-                  <input
-                    type="number"
-                    min="4"
-                    max="24"
-                    step="0.25"
-                    value={customWidth || ""}
-                    onChange={(e) => setCustomWidth(Number(e.target.value))}
-                    className="w-32 p-3 border-2 border-navy rounded text-center bg-navy text-white text-lg"
-                    placeholder="Width"
+                  <div className="flex flex-col items-center">
+                    <img 
+                      src="/images/order/arrow.png" 
+                      alt="increment" 
+                      className="w-6 h-6 cursor-pointer mb-1 opacity-50 hover:opacity-100 transition-opacity" 
+                      onMouseDown={() => startIncrementing('width', 'up')}
+                      onMouseUp={stopIncrementing}
+                      onMouseLeave={stopIncrementing}
+                    />
+                    <div className="bg-[url('/images/order/input-outline.png')] bg-contain bg-center bg-no-repeat p-4">
+                      <input
+                        type="number"
+                        min="4"
+                        max="24"
+                        step="0.25"
+                        value={customWidth || ""}
+                        onChange={(e) => setCustomWidth(Number(e.target.value))}
+                        className="w-24 text-center bg-transparent text-gray-700 text-lg focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        placeholder="Width"
+                      />
+                    </div>
+                    <img 
+                      src="/images/order/arrow.png" 
+                      alt="decrement" 
+                      className="w-6 h-6 cursor-pointer mt-1 rotate-180 opacity-50 hover:opacity-100 transition-opacity" 
+                      onMouseDown={() => startIncrementing('width', 'down')}
+                      onMouseUp={stopIncrementing}
+                      onMouseLeave={stopIncrementing}
+                    />
+                  </div>
+                  <img src="/images/order/x-black.png" alt="x" className="w-6 h-6" />
+                  <div className="flex flex-col items-center">
+                    <img 
+                      src="/images/order/arrow.png" 
+                      alt="increment" 
+                      className="w-6 h-6 cursor-pointer mb-1 opacity-50 hover:opacity-100 transition-opacity" 
+                      onMouseDown={() => startIncrementing('height', 'up')}
+                      onMouseUp={stopIncrementing}
+                      onMouseLeave={stopIncrementing}
+                    />
+                    <div className="bg-[url('/images/order/input-outline.png')] bg-contain bg-center bg-no-repeat p-4">
+                      <input
+                        type="number"
+                        min="4"
+                        max="36"
+                        step="0.25"
+                        value={customHeight || ""}
+                        onChange={(e) => setCustomHeight(Number(e.target.value))}
+                        className="w-24 text-center bg-transparent text-gray-700 text-lg focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        placeholder="Height"
+                      />
+                    </div>
+                    <img 
+                      src="/images/order/arrow.png" 
+                      alt="decrement" 
+                      className="w-6 h-6 cursor-pointer mt-1 rotate-180 opacity-50 hover:opacity-100 transition-opacity" 
+                      onMouseDown={() => startIncrementing('height', 'down')}
+                      onMouseUp={stopIncrementing}
+                      onMouseLeave={stopIncrementing}
+                    />
+                  </div>
+                  <img 
+                    src={isValid ? "/images/order/check.png" : "/images/order/x-red.png"} 
+                    alt={isValid ? "valid" : "invalid"} 
+                    className="w-6 h-6"
                   />
-                  <span className="text-gray-600 text-xl">x</span>
-                  <input
-                    type="number"
-                    min="4"
-                    max="36"
-                    step="0.25"
-                    value={customHeight || ""}
-                    onChange={(e) => setCustomHeight(Number(e.target.value))}
-                    className="w-32 p-3 border-2 border-navy rounded text-center bg-navy text-white text-lg"
-                    placeholder="Height"
-                  />
-                  <span className={`text-3xl ${isValid ? 'text-green-500' : 'text-red-500'}`}>
-                    {isValid ? '✓' : '✕'}
-                  </span>
                 </div>
                 {errorMessage && (
-                  <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                  <p className="text-red text-sm mt-2">{errorMessage}</p>
                 )}
               </div>
 
@@ -209,7 +316,7 @@ export default function ShopPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-navy flex items-center gap-2">
+              <h2 className="text-2xl font-semibold mb-4 text-black flex items-center gap-2">
                 Finish
                 <div className="group relative">
                   <span className="w-5 h-5 rounded-full bg-navy text-white text-xs flex items-center justify-center cursor-help">i</span>
@@ -223,10 +330,10 @@ export default function ShopPage() {
                   <button
                     key={finish.id}
                     onClick={() => handleFinishChange(finish)}
-                    className={`p-4 rounded-lg border-2 transition-colors ${
+                    className={`p-6 transition-colors ${
                       selectedFinish.id === finish.id
-                        ? "border-navy bg-navy text-white"
-                        : "border-gray-200 hover:border-navy text-gray-700"
+                        ? "bg-[url('/images/order/button-filled.png')] bg-contain bg-center bg-no-repeat text-white"
+                        : "text-gray-700 hover:bg-[url('/images/order/button-outline.png')] hover:bg-contain hover:bg-center hover:bg-no-repeat"
                     }`}
                   >
                     {finish.name}
@@ -236,7 +343,7 @@ export default function ShopPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-navy flex items-center gap-2">
+              <h2 className="text-2xl font-semibold mb-4 text-black flex items-center gap-2">
                 Orientation
                 <div className="group relative">
                   <span className="w-5 h-5 rounded-full bg-navy text-white text-xs flex items-center justify-center cursor-help">i</span>
@@ -250,10 +357,10 @@ export default function ShopPage() {
                   <button
                     key={orientation}
                     onClick={() => handleOrientationChange(orientation)}
-                    className={`p-4 rounded-lg border-2 transition-colors ${
+                    className={`p-6 transition-colors ${
                       selectedOrientation === orientation
-                        ? "border-navy bg-navy text-white"
-                        : "border-gray-200 hover:border-navy text-gray-700"
+                        ? "bg-[url('/images/order/button-filled.png')] bg-contain bg-center bg-no-repeat text-white"
+                        : "text-gray-700 hover:bg-[url('/images/order/button-outline.png')] hover:bg-contain hover:bg-center hover:bg-no-repeat"
                     }`}
                   >
                     {orientation.charAt(0).toUpperCase() + orientation.slice(1)}
@@ -262,23 +369,19 @@ export default function ShopPage() {
               </div>
             </div>
 
-            <div className="pt-4">
-              <p className="text-3xl font-bold text-navy">
-                {formatPrice(getPrice(selectedSize.display, selectedFinish.id))}
-              </p>
+            <div className="flex items-center justify-center pt-4">
+              <button
+                onClick={handleAddToCart}
+                disabled={!isValid}
+                className={`p-6 text-lg font-semibold transition-colors w-[calc(50%-8px)] ${
+                  isValid 
+                    ? "bg-[url('/images/order/button-filled.png')] bg-contain bg-center bg-no-repeat text-white hover:bg-[url('/images/order/button-filled.png')]" 
+                    : "bg-[url('/images/order/button-outline.png')] bg-contain bg-center bg-no-repeat text-gray-500"
+                }`}
+              >
+                Add to Cart
+              </button>
             </div>
-
-            <button
-              onClick={handleAddToCart}
-              disabled={!isValid}
-              className={`w-full py-4 rounded-lg text-lg font-semibold transition-colors ${
-                isValid 
-                  ? "bg-navy text-white hover:bg-navy/90" 
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
-            >
-              Add to Cart
-            </button>
           </div>
         </div>
       </div>

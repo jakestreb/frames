@@ -60,6 +60,7 @@ module.exports = {
         red: "#ab4949",
         primary: "#4A6CF7",
         yellow: "#fffcd3",
+        blue: "#5f72a5",
         "bg-color-dark": "#171C28",
         "body-color": {
           DEFAULT: "#788293",

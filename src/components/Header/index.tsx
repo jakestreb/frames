@@ -68,8 +68,8 @@ const Header = () => {
                     height={20}
                   />
                   <div className="flex flex-col justify-center">
-                    <div className="font-sigmar text-3xl text-tan -mb-2">MONKEY</div>
-                    <div className="font-sigmar text-3xl text-tan">MONKEY</div>
+                    <div className="font-sigmar text-3xl text-black -mb-2">MONKEY</div>
+                    <div className="font-sigmar text-3xl text-black">MONKEY</div>
                   </div>
                 </div>
               </Link>
@@ -92,8 +92,8 @@ const Header = () => {
                             href={menuItem.path}
                             className={`font-sigmar flex py-2 text-base md:mr-0 md:inline-flex md:px-0 md:py-6 ${
                               usePathName === menuItem.path
-                                ? "text-dark"
-                                : "text-tan hover:text-dark"
+                                ? "text-black"
+                                : "text-black hover:text-black"
                             }`}
                           >
                             {menuItem.title}
@@ -102,7 +102,7 @@ const Header = () => {
                           <>
                             <p
                               onClick={() => handleSubmenu(index)}
-                              className="flex cursor-pointer items-center justify-between py-2 text-base text-dark group-hover:text-primary md:mr-0 md:inline-flex md:px-0 md:py-6"
+                              className="flex cursor-pointer items-center justify-between py-2 text-base text-black group-hover:text-black md:mr-0 md:inline-flex md:px-0 md:py-6"
                             >
                               {menuItem.title}
                               <span className="pl-3">
