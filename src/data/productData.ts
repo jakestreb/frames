@@ -1,39 +1,37 @@
-export interface ProductSize {
+export type ProductSize = {
   width: number;
   height: number;
   display: string;
-}
+};
 
-export interface ProductFinish {
+export type ProductFinish = {
   id: string;
   name: string;
   price: number;
-}
+};
 
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
+export type ProductOrientation = "landscape" | "portrait";
+
+export interface ProductData {
   sizes: ProductSize[];
   finishes: ProductFinish[];
-  image: string;
+  orientations: ProductOrientation[];
 }
 
-export const PRODUCT_DATA: Product = {
-  id: "oak-walnut-frame",
-  name: "Oak Frame",
-  description: "Handcrafted solid oak frame with walnut detail",
-  image: "/images/about/frame_fake.png",
+export const PRODUCT_DATA: ProductData = {
   sizes: [
-    { width: 4, height: 6, display: "4x6" },
     { width: 8, height: 10, display: "8x10" },
+    { width: 11, height: 14, display: "11x14" },
     { width: 12, height: 16, display: "12x16" },
-    { width: 16, height: 24, display: "16x24" }
+    { width: 16, height: 20, display: "16x20" },
+    { width: 18, height: 24, display: "18x24" },
+    { width: 24, height: 36, display: "24x36" },
   ],
   finishes: [
-    { id: "natural", name: "Natural", price: 0 },
-    { id: "oil", name: "Oil", price: 0 }
-  ]
+    { id: "oil", name: "Oil", price: 0 },
+    { id: "natural", name: "Natural", price: 0 }
+  ],
+  orientations: ["landscape", "portrait"],
 };
 
 // Price mapping based on size and finish
