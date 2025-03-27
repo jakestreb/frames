@@ -7,7 +7,6 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class",
   theme: {
     container: {
       center: true,
@@ -34,14 +33,33 @@ module.exports = {
       // => @media (min-width: 1400px) { ... }
     },
     extend: {
+      fontFamily: {
+        outfit: ["var(--font-outfit)"],
+        "darumadrop-one": ["var(--font-darumadrop-one)"],
+        sigmar: ["var(--font-sigmar)"],
+        "bowlby-one": ["var(--font-bowlby-one)"],
+        "noto-serif": ["var(--font-noto-serif)"],
+      },
+      keyframes: {
+        'bounce-low': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-25%)' },
+        }
+      },
+      animation: {
+        'bounce-low': 'bounce-low 1s infinite',
+      },
       colors: {
         current: "currentColor",
         transparent: "transparent",
         white: "#FFFFFF",
         black: "#121723",
         dark: "#1D2430",
+        navy: "#2c334b",
+        tan: "#eae3dc",
+        red: "#ab4949",
         primary: "#4A6CF7",
-        yellow: "#FBB040",
+        yellow: "#fffcd3",
         "bg-color-dark": "#171C28",
         "body-color": {
           DEFAULT: "#788293",

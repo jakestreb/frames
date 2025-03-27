@@ -1,57 +1,102 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 const AboutSectionTwo = () => {
+  const [hoveredSize, setHoveredSize] = useState<string | null>(null);
+
   return (
-    <section className="py-16 md:py-20 lg:py-28">
+    <section id="about" className="py-16 md:py-20 lg:py-28 bg-tan">
       <div className="container">
-        <div className="-mx-4 flex flex-wrap items-center">
-          <div className="w-full px-4 lg:w-1/2">
-            <div
-              className="relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0"
-              data-wow-delay=".15s"
-            >
-              <Image
-                src="/images/about/about-image-2.svg"
-                alt="about image"
-                fill
-                className="drop-shadow-three dark:hidden dark:drop-shadow-none"
-              />
-              <Image
-                src="/images/about/about-image-2-dark.svg"
-                alt="about image"
-                fill
-                className="hidden drop-shadow-three dark:block dark:drop-shadow-none"
-              />
-            </div>
-          </div>
-          <div className="w-full px-4 lg:w-1/2">
-            <div className="max-w-[470px]">
-              <div className="mb-9">
-                <h3 className="mb-4 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl">
-                  Bug free code
-                </h3>
-                <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="mb-9">
-                <h3 className="mb-4 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl">
-                  Premier support
-                </h3>
-                <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt.
-                </p>
-              </div>
-              <div className="mb-1">
-                <h3 className="mb-4 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl">
-                  Next.js
-                </h3>
-                <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
-                  Lorem ipsum dolor sit amet, sed do eiusmod tempor incididunt
-                  consectetur adipiscing elit setim.
-                </p>
+        <div className="flex justify-center">
+          <div className="w-full px-4 lg:w-2/3">
+            <div className="max-w-[1000px] mx-auto">
+              <div className="grid grid-cols-1 gap-12">
+                {/* First Row */}
+                <div className="flex items-center justify-between h-[250px]">
+                  <div className="w-1/2">
+                    <h3 className="font-darumadrop text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-2xl xl:text-3xl mb-4">
+                      100% Solid Hardwood
+                    </h3>
+                    <p className="font-outfit text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
+                      All frames are made from solid American oak and walnut
+                    </p>
+                  </div>
+                  <div className="w-1/2 flex justify-end">
+                    <Image
+                      src="/images/about/planks.png"
+                      alt="Wood icon"
+                      width={300}
+                      height={300}
+                      className="w-[300] h-[300]"
+                    />
+                  </div>
+                </div>
+
+                {/* Second Row */}
+                <div className="flex items-center justify-between text-right h-[250px]">
+                  <div className="w-1/2 flex justify-start">
+                    <Image
+                      src="/images/about/truck.png"
+                      alt="Free delivery icon"
+                      width={300}
+                      height={300}
+                      className="w-[300] h-[300]"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <h3 className="font-darumadrop text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-2xl xl:text-3xl mb-4">
+                      Free Shipping
+                    </h3>
+                    <p className="font-outfit text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
+                      All orders ship free within the continental USA
+                    </p>
+                  </div>
+                </div>
+
+                {/* Third Row */}
+                <div className="flex items-center justify-between h-[250px]">
+                  <div className="w-1/2">
+                    <h3 className="font-darumadrop text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-2xl xl:text-3xl mb-4">
+                      Frame Any Print
+                    </h3>
+                    <p className="font-outfit text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
+                      Custom sizing at 1/4" increments up to 24" x 36"
+                    </p>
+                  </div>
+                  <div className="w-1/2 flex justify-end">
+                    <Image
+                      src="/images/about/sizing.png"
+                      alt="Sizing icon"
+                      width={300}
+                      height={300}
+                      className="w-[300] h-[300]"
+                    />
+                  </div>
+                </div>
+
+                {/* Fourth Row */}
+                <div className="flex items-center justify-between text-right h-[300px]">
+                  <div className="w-1/2 flex justify-start">
+                    <Image
+                      src="/images/about/outline.png"
+                      alt="Video outline"
+                      width={300}
+                      height={300}
+                      className="w-[300] h-[300]"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <h3 className="font-darumadrop text-2xl font-bold text-black dark:text-white sm:text-3xl lg:text-2xl xl:text-3xl mb-4">
+                      Made in the USA
+                    </h3>
+                    <p className="font-outfit text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
+                      Handcrafted with love in Atlanta, GA
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
